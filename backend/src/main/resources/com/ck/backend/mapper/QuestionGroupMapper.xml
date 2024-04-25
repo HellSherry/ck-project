@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ck.backend.mapper.QuestionGroupMapper">
+
+    <resultMap type="com.ck.backend.pojo.QuestionGroup" id="QuestionGroupMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="courseid" column="courseid" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="QuestionGroupMap">
+        select id,
+               name,
+               courseid
+        from question_group
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="QuestionGroupMap">
+        select
+        id, name, courseid
+        from question_group
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="courseid != null">
+                and courseid = #{courseid}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+     <select id="selectAllByCourseid" resultType="com.ck.backend.pojo.QuestionGroup">
+        select    id, name, q.courseid from  question_group qg LEFT JOIN(
+            SELECT groupId,count(1) AS courseid from question GROUP BY groupId) q on qg.id=q.groupId
+                                       where  qg.courseid = #{id}
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from question_group
+        <where>
+
+            <if test="search != null and search != ''">
+                and name like '%${search}%'
+            </if>
+
+        </where>
+    </select>
+    <select id="selectLimit" resultType="com.ck.backend.pojo.QuestionGroup">
+        select *
+        from question_group
+        <where>
+
+            <if test="search != null and search != ''">
+                and name like '%${search}%'
+            </if>
+
+        </where>
+        limit ${(page-1)*10},10
+    </select>
+
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into question_group(name, courseid)
+        values (#{name}, #{courseid})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into question_group(name, courseid)
+        values
+        <foreach collection="entities" item="pojo" separator=",">
+            (#{pojo.name}, #{pojo.courseid})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into question_group(name, courseid)
+        values
+        <foreach collection="entities" item="pojo" separator=",">
+            (#{pojo.name}, #{pojo.courseid})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        courseid = values(courseid)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update question_group
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="courseid != null">
+                courseid = #{courseid},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from question_group
+        where id = #{id}
+    </delete>
+    <delete id="deletes">
+        <if test="ids != null and ids != ''">
+            delete
+            from question_group
+            where id in (${ids})
+        </if>
+    </delete>
+
+</mapper>
+

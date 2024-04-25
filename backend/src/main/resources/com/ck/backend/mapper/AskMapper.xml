@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ck.backend.mapper.AskMapper">
+    <insert useGeneratedKeys="true" keyProperty="id" id="addOne">
+        insert into question_ask (question, creatorUser, creatTime)
+        values (#{question}, #{creatorUser}, now())
+    </insert>
+    <insert id="addOneRes">
+        INSERT INTO `question_response` (`askId`, `answer`, `creatorUser`, `creatTime`)
+        VALUES (#{askId}, #{context}, #{userId}, now());
+
+
+    </insert>
+
+
+    <select id="selectLimit" resultType="com.ck.backend.pojo.QuestionAsk">
+        SELECT ask.id, ask.question, ask.creatorUser, ask.creatTime, a1.num
+        FROM question_ask ask
+        LEFT JOIN (SELECT askId, count(1) as num from question_response GROUP BY askId) a1 ON ask.id = a1.askId
+        <where>
+            <if test="search != null and search != ''">
+                ask.question like concat('%',#{search},'%') or ask.creatorUser like concat('%',#{search},'%')
+            </if>
+        </where>
+        <if test="isHot != null and isHot != ''">
+            order by a1.num desc
+        </if>
+        <if test="isHot == null or isHot == ''">
+            order by ask.creatTime desc
+        </if>
+        <if test="page != null and page != ''">
+            limit ${(page-1)*10},10
+        </if>
+    </select>
+    <select id="selectCount" resultType="java.lang.Integer">
+        select count(1) from question_ask
+        <where>
+            <if test="search != null and search != ''">
+                question like concat('%',#{search},'%') or creatorUser like concat('%',#{search},'%')
+            </if>
+        </where>
+
+
+    </select>
+    <select id="selectDetail" resultType="com.ck.backend.pojo.QuestionResponse">
+        select *
+        from question_response
+        where askId = #{id}
+    </select>
+    <select id="selectById" resultType="com.ck.backend.pojo.QuestionAsk">
+        SELECT ask.id, ask.question, ask.creatorUser, ask.creatTime, a1.num
+        FROM question_ask ask
+                 LEFT JOIN (SELECT askId, count(1) as num from question_response GROUP BY askId) a1 ON ask.id = a1.askId
+        where ask.id = #{id}
+
+    </select>
+    <select id="selectReply" resultType="java.util.HashMap">
+        SELECT res.id,
+               res.answer,
+               res.creatTime,
+               ask.question,
+               res.askId,
+               res.creatorUser,
+               us.userImg,
+               us.username
+        from question_response res
+                 LEFT JOIN question_ask ask on res.askId = ask.id
+                 LEFT JOIN `user` us on res.creatorUser = us.userId
+                                            where ask.creatorUser = #{id}
+        ORDER BY res.creatTime desc
+
+
+    </select>
+</mapper>
+

@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ck.backend.mapper.QuestionCourseMapper">
+
+    <resultMap type="com.ck.backend.pojo.QuestionCourse" id="QuestionCourseMap">
+        <result property="id" column="Id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="coursedescription" column="courseDescription" jdbcType="VARCHAR"/>
+        <result property="speciaid" column="speciaId" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="QuestionCourseMap">
+        select Id,
+               name,
+               courseDescription,
+               speciaId
+        from question_course
+        where Id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="QuestionCourseMap">
+        select
+        Id, name, courseDescription, speciaId
+        from question_course
+        <where>
+            <if test="id != null">
+                and Id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="coursedescription != null and coursedescription != ''">
+                and courseDescription = #{coursedescription}
+            </if>
+            <if test="speciaid != null">
+                and speciaId = #{speciaid}
+            </if>
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+
+    <resultMap id="getCourseAndGroupBySpeciaidMap" type="com.ck.backend.pojo.QuestionCourse">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="coursedescription" property="coursedescription"/>
+        <result column="speciaid" property="speciaid"/>
+        <association property="questionGroups" select="com.ck.backend.mapper.QuestionGroupMapper.selectAllByCourseid" column="id"/>
+    </resultMap>
+    <select id="getCourseAndGroupBySpeciaid"  resultMap="getCourseAndGroupBySpeciaidMap">
+        select * from  question_course where speciaId = #{id};
+    </select>
+    <select id="getAllCourseAndGroup" resultMap="getCourseAndGroupBySpeciaidMap">
+        select * from  question_course
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1)
+        from question_course
+        <where>
+            <if test="search != null and search != ''">
+                and name like '%${search}%' or courseDescription like '%${search}%'
+            </if>
+        </where>
+    </select>
+    <select id="selectLimit" resultType="com.ck.backend.pojo.QuestionCourse">
+
+
+
+
+        select `Id`, `name`, `courseDescription` AS coursedescription, `speciaId` AS speciaid from  question_course
+        <where>
+            <if test="search != null and search != ''">
+                and name like '%${search}%' or courseDescription like '%${search}%'
+            </if>
+        </where>
+        <if test="page != null and page != ''">
+            limit ${(page-1)*10},10
+        </if>
+
+    </select>
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into question_course(name, courseDescription, speciaId)
+        values (#{name}, #{coursedescription}, #{speciaid})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into question_course(name, courseDescription, speciaId)
+        values
+        <foreach collection="entities" item="pojo" separator=",">
+            (#{pojo.name}, #{pojo.coursedescription}, #{pojo.speciaid})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="id" useGeneratedKeys="true">
+        insert into question_course(name, courseDescription, speciaId)
+        values
+        <foreach collection="entities" item="pojo" separator=",">
+            (#{pojo.name}, #{pojo.coursedescription}, #{pojo.speciaid})
+        </foreach>
+        on duplicate key update
+        name = values(name),
+        courseDescription = values(courseDescription),
+        speciaId = values(speciaId)
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update question_course
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="coursedescription != null and coursedescription != ''">
+                courseDescription = #{coursedescription},
+            </if>
+            <if test="speciaid != null">
+                speciaId = #{speciaid},
+            </if>
+        </set>
+        where Id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from question_course
+        where Id = #{id}
+    </delete>
+    <delete id="deletes">
+        <if test="ids != null and ids != ''">
+            delete
+            from question_course
+            where Id in (${ids})
+        </if>
+    </delete>
+
+</mapper>
+

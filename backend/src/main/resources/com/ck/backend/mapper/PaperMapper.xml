@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ck.backend.mapper.PaperMapper">
+
+    <resultMap type="com.ck.backend.pojo.Paper" id="PaperMap">
+        <result property="paperid" column="paperId" jdbcType="INTEGER"/>
+        <result property="papername" column="paperName" jdbcType="VARCHAR"/>
+        <result property="questions" column="questions" jdbcType="VARCHAR"/>
+        <result property="creatorusername" column="creatorUsername" jdbcType="VARCHAR"/>
+        <result property="totalscore" column="totalScore" jdbcType="INTEGER"/>
+        <result property="starttime" column="startTime" jdbcType="TIMESTAMP"/>
+        <result property="duration" column="duration" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="PaperMap">
+        select paperId,
+               paperName,
+               questions,
+               creatorUsername,
+               totalScore,
+               startTime,
+               duration
+        from paper
+        where paperId = #{paperid}
+
+
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="PaperMap">
+        select
+        paperId, paperName, questions, creatorUsername, totalScore, startTime, duration
+        from paper
+        <where>
+            <if test="paperid != null">
+                and paperId = #{paperid}
+            </if>
+            <if test="papername != null and papername != ''">
+                and paperName = #{papername}
+            </if>
+            <if test="questions != null and questions != ''">
+                and questions = #{questions}
+            </if>
+            <if test="creatorusername != null and creatorusername != ''">
+                and creatorUsername = #{creatorusername}
+            </if>
+            <if test="totalscore != null">
+                and totalScore = #{totalscore}
+            </if>
+            <if test="starttime != null">
+                and startTime = #{starttime}
+            </if>
+            <if test="duration != null">
+                and duration = #{duration}
+            </if>
+
+        </where>
+        limit #{pageable.offset}, #{pageable.pageSize}
+    </select>
+
+    <!--统计总行数-->
+    <select id="count" resultType="int">
+        select count(1)
+        from paper
+        <where>
+            <if test="starttime != null and starttime != ''">
+                and starttime &gt;= #{starttime}
+            </if>
+            <if test="endtime != null and endtime != ''">
+                and starttime &lt;= #{endtime}
+            </if>
+            <if test="search != null and search != ''">
+                and paperName like concat('%',#{search},'%') or creatorUsername like concat('%',#{search},'%') or
+                paperId = #{search}
+            </if>
+        </where>
+    </select>
+
+
+    <resultMap type="com.ck.backend.pojo.Paper" id="paperClassMap">
+        <id column="paperid" property="paperid"/>
+        <result column="paperName" property="papername"/>
+        <result column="questions" property="questions"/>
+        <result column="creatorUsername" property="creatorusername"/>
+        <result column="totalScore" property="totalscore"/>
+        <result column="startTime" property="starttime"/>
+        <result column="duration" property="duration"/>
+        <association property="paperClasses" select="com.ck.backend.mapper.PaperMapper.selectPaperClassById"
+                     column="paperid"></association>
+    </resultMap>
+    <select id="selectPaperClassById" parameterType="int" resultType="com.ck.backend.pojo.PaperClass">
+        select classid, name
+        from paperclass
+                 left join class_info on paperclass.classid = class_info.id
+        where paperid = #{0}
+    </select>
+
+
+    <select id="selectAllByLimit" resultMap="paperClassMap">
+        select
+        paperId, paperName, questions, creatorUsername, totalScore, startTime, duration
+        from paper
+        <where>
+            <if test="starttime != null and starttime != ''">
+                and starttime &gt;= #{starttime}
+            </if>
+            <if test="endtime != null and endtime != ''">
+                and starttime &lt;= #{endtime}
+            </if>
+            <if test="search != null and search != ''">
+                and paperName like concat('%',#{search},'%') or creatorUsername like concat('%',#{search},'%') or
+                paperId = #{search}
+            </if>
+        </where>
+        order by paperId desc
+        <if test="page != null and page != ''">
+            limit ${(page-1)*10},10
+        </if>
+    </select>
+    <select id="getExamById" resultType="com.ck.backend.pojo.Paper">
+        select papername, totalScore, startTime, duration
+        from paper
+        where paperid = #{paperId}
+    </select>
+    <select id="selectGrades" resultType="com.ck.backend.pojo.Answer">
+        SELECT u.username AS answerContent, u.userId, a.score, a.answer_time as answerTime
+        FROM `user` AS u
+        LEFT JOIN `answer` AS a ON u.userId = a.userId AND a.paperid = #{paperId}
+        <if test="classId != null and classId != ''">
+            WHERE u.classid = #{classId};
+        </if>
+
+    </select>
+    <select id="selectGradeByPaperId" resultType="com.ck.backend.pojo.Answer">
+        select `answerContent`, `score`, `answer_time` as answerTime
+        from answer
+        where paperId = #{paperId}
+          and userId = #{userId}
+    </select>
+    <select id="selectHistoryListByIdLimit" resultType="com.ck.backend.pojo.Paper">
+        SELECT tmp.paperid,
+               tmp.papername,
+               tmp.starttime,
+               tmp.totalscore,
+               tmp.duration
+        FROM (SELECT a.*,
+                     papername,
+                     p.starttime,
+                     p.totalscore,
+                     p.duration,
+                     DATE_ADD(p.starttime, INTERVAL p.duration MINUTE) as endtime
+              FROM answer a
+                       INNER JOIN paper p ON a.paperId = p.paperid) tmp
+                 LEFT JOIN paperclass pc ON tmp.paperid = pc.paperid
+                 LEFT JOIN `user` u ON u.classid = pc.classid AND u.userid = tmp.userId
+        WHERE NOW() > DATE_ADD(tmp.endtime, INTERVAL 8 HOUR)
+          AND u.userId = #{id}
+        ORDER BY tmp.starttime
+                desc
+        limit ${(page-1)*10},10
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="paperid" useGeneratedKeys="true">
+        insert into paper(paperName, questions, creatorUsername, totalScore, startTime, duration)
+        values (#{papername}, #{questions}, #{creatorusername}, #{totalscore}, #{starttime}, #{duration})
+    </insert>
+
+    <insert id="insertBatch" keyProperty="paperid" useGeneratedKeys="true">
+        insert into paper(paperName, questions, creatorUsername, totalScore, startTime, duration)
+        values
+        <foreach collection="entities" item="pojo" separator=",">
+            (#{pojo.papername}, #{pojo.questions}, #{pojo.creatorusername}, #{pojo.totalscore}, #{pojo.starttime},
+            #{pojo.duration})
+        </foreach>
+    </insert>
+
+    <insert id="insertOrUpdateBatch" keyProperty="paperid" useGeneratedKeys="true">
+        insert into paper(paperName, questions, creatorUsername, totalScore, startTime, duration)
+        values
+        <foreach collection="entities" item="pojo" separator=",">
+            (#{pojo.papername}, #{pojo.questions}, #{pojo.creatorusername}, #{pojo.totalscore}, #{pojo.starttime},
+            #{pojo.duration})
+        </foreach>
+        on duplicate key update
+        paperName = values(paperName),
+        questions = values(questions),
+        creatorUsername = values(creatorUsername),
+        totalScore = values(totalScore),
+        startTime = values(startTime),
+        duration = values(duration),
+    </insert>
+    <insert id="insertAnswer">
+        insert into answer(answerContent, score, answer_time, userId, paperId)
+        values (#{answerContent}, #{score}, #{answerTime}, #{userId}, #{paperId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update paper
+        <set>
+            <if test="papername != null and papername != ''">
+                paperName = #{papername},
+            </if>
+            <if test="questions != null and questions != ''">
+                questions = #{questions},
+            </if>
+            <if test="creatorusername != null and creatorusername != ''">
+                creatorUsername = #{creatorusername},
+            </if>
+            <if test="totalscore != null">
+                totalScore = #{totalscore},
+            </if>
+            <if test="starttime != null">
+                startTime = #{starttime},
+            </if>
+            <if test="duration != null">
+                duration = #{duration},
+            </if>
+
+        </set>
+        where paperId = #{paperid}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete
+        from paper
+        where paperId = #{paperid}
+    </delete>
+
+</mapper>
+

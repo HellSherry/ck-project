@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ck.backend.mapper.QuestionBankMapper">
+
+    <select id="selectQuestionList" resultType="com.ck.backend.entity.Question">
+        select q.groupId, g.name,g.courseid,c.name from question as q
+                                                            inner join question_group as g
+                                                                       on q.groupId = g.id
+                                                            inner join question_course as c
+                                                                       on g.courseid = c.Id
+        group by q.groupId;
+    </select>
+    <select id="selectQuestion" resultType="com.ck.backend.entity.Question">
+        select * from `question_course`
+        group by id;
+    </select>
+    <select id="selectQuestionById" resultType="com.ck.backend.entity.Questionbank">
+        select * from question as q,`question_group` as g
+        where q.`groupId`=g.`id`
+          and q.id not in (select questionId from questionbank as b  where b.userId=#{userId})
+          and q.groupId=#{groupId}
+            limit 20;
+    </select>
+    <select id="selectQuestionByIdTwo" resultType="com.ck.backend.entity.Questionbank">
+        select * from question as q,`question_group` as g
+        where q.`groupId`=g.`id`
+          and q.groupId=#{groupId}
+            limit 20;
+    </select>
+    <insert id="insertEmp" parameterType="com.ck.backend.entity.Questionbank">
+        insert into questionbank(id,cName,gname,question,answers,ranswer,difficulty,
+                                 enable,parse,response,number,submissionTime,questionId,correct,groupId,user,userId)
+        values(#{id},#{cName},#{gname},#{question},#{answers},#{ranswer}
+              ,#{difficulty},#{enable},#{parse},#{response},#{number},#{submissionTime},#{questionId},#{correct},#{groupId},#{user},#{userId});
+    </insert>
+    <select id="FillAnswersByNumber" resultType="com.ck.backend.entity.Questionbank">
+        #         select q.*,COUNT(1) as COUNT from questionbank as q
+            #         where response != "null"
+                      #         group by number
+        select number,gName,count(1) as COUNT,MIN(SubmissionTime) as SubmissionTime from questionbank as q
+        where response != 'null' and  response != '0'
+          and  userId=#{userId}
+        GROUP BY gName,number
+
+    </select>
+    <select id="getQuestionBank" resultType="com.ck.backend.entity.Questionbank">
+        select  COUNT(1) as COUNT from questionbank
+        where user=#{username}
+          and userId=#{userId}
+            #         group by number
+    </select>
+    <select id="getQuestionBankByNumber" resultType="com.ck.backend.entity.Questionbank">
+        select * from questionbank
+        where  user=#{username}
+          and userId=#{userId}
+          and number=#{number}
+    </select>
+    <select id="getFillAnswers" resultType="com.ck.backend.entity.Questionbank">
+        select COUNT(1) as COUNT from questionbank as q
+        where response != "null"
+          and  q.number=#{number}
+          and q.user=#{username}
+          and q.userId=#{userId}
+        group by number
+    </select>
+    <select id="getFillAnswersAll" resultType="com.ck.backend.entity.Questionbank">
+        select COUNT(1) as COUNT from questionbank
+        where number=#{number}
+          and user=#{username}
+          and userId=#{userId}
+        group by number
+    </select>
+    <select id="getFillAll" resultType="com.ck.backend.entity.Questionbank">
+        select count(1) as COUNT from questionbank
+        where number=#{groupId}
+          and user=#{username}
+          and userId=#{userId}
+    </select>
+    <select id="getFillAllTwo" resultType="com.ck.backend.entity.Questionbank">
+        select q.* from questionbank as q
+        where q.number=#{number}
+          and q.user=#{username}
+          and q.userId=#{userId}
+    </select>
+    <select id="getFill" resultType="com.ck.backend.entity.Questionbank">
+        select COUNT(1) as COUNT from questionbank as q
+        where q.`response`=q.`ranswer`
+          and  q.number=#{number}
+          and q.user=#{username}
+          and q.userId=#{userId}
+        group by number
+
+    </select>
+    <select id="QuestionBank" resultType="com.ck.backend.entity.Questionbank">
+        select COUNT(1) as COUNT from question as q
+        where q.`groupId`=#{groupId}
+    </select>
+    <select id="QuestionCourse" resultType="com.ck.backend.entity.Questionbank">
+        select COUNT(1) as COUNT from questionbank as q
+        where q.`groupId`=#{groupId}
+          and userId=#{userId}
+    </select>
+
+    <select id="setByName" resultType="com.ck.backend.entity.User">
+        select * from user where username=#{username}
+    </select>
+    <select id="getCount" resultType="java.lang.Integer">
+        select COUNT(1)  from questionbank
+        where  number=#{number}
+    </select>
+    <select id="getReportByNumber" resultType="com.ck.backend.entity.Questionbank">
+        select ranswer,response from questionbank
+        where number=#{number}
+    </select>
+</mapper>
+

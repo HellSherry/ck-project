@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ck.backend.mapper.UserMapper">
+    <insert id="insert">
+        insert into user (`userEmail`, `username`, `password`, `grade`, `userImg`, `defaultAddress`, `identity`,classid,`phone`)
+        VALUES (#{userEmail}, #{username}, #{password}, #{grade}, #{userImg}, #{defaultAddress}, #{identity},#{classid},#{phone});
+    </insert>
+    <update id="update">
+        update user
+        <set>
+            <if test="userEmail != null and userEmail != ''">
+                userEmail = #{userEmail},
+            </if>
+            <if test="username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="grade != null">
+                grade = #{grade},
+            </if>
+            <if test="userImg != null and userImg != ''">
+                userImg = #{userImg},
+            </if>
+            <if test="defaultAddress != null and defaultAddress != ''">
+                defaultAddress = #{defaultAddress},
+            </if>
+            <if test="identity != null and identity != ''">
+                identity = #{identity},
+            </if>
+            <if test="classid != null and classid != ''">
+                classid = #{classid},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+
+        </set>
+        where userId = #{userId}
+
+    </update>
+
+    <select id="selectByIds" resultType="com.ck.backend.pojo.User">
+        <if test="ids != null and ids != ''">
+            select * from user where userId in (${ids})
+            limit ${(page-1)*10},10
+        </if>
+    </select>
+    <select id="selectLimit" resultType="com.ck.backend.pojo.User">
+        select * from user
+        <where>
+            <if test="identity != null and identity != ''">
+                user.identity = #{identity}
+            </if>
+            <if test="search != null and search != ''">
+                user.username like '%${search}%' or user.userEmail like '%${search}%' or user.defaultAddress like
+                '%${search}%' or user.grade like '%${search}%' or user.userId like '%${search}%'
+            </if>
+
+        </where>
+
+        limit ${(page-1)*10},10
+    </select>
+    <select id="count" resultType="java.lang.Integer">
+        select count(1) from user
+        <where>
+            <if test="identity != null and identity != ''">
+                user.identity = #{identity}
+            </if>
+            <if test="search != null and search != ''">
+                user.username like '%${search}%' or user.userEmail like '%${search}%' or user.defaultAddress like
+                '%${search}%' or user.grade like '%${search}%' or user.userId like '%${search}%'
+            </if>
+
+        </where>
+    </select>
+    <delete id="deletes">
+        <if test="ids != null and ids != ''">
+            delete
+            from user
+            where userId in (${ids})
+        </if>
+    </delete>
+
+</mapper>

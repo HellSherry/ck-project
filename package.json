@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@vueuse/core": "^10.7.1",
+    "vite-plugin-mkcert": "^1.17.1",
+    "vue-cropper": "next",
+    "vue3-json-excel": "^1.0.10-alpha"
+  }
+}

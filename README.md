@@ -1,9 +1,12 @@
 # ck-project
- hello
-dadada
-adadczc
-    aaaa
- 
 
+# 安装依赖
+npm install
 
-ssssssssssss
+# 启动项目
+npm run dev
+
+# 打包项目
+npm run b
+
+测试

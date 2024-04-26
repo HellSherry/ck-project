@@ -15,5 +15,6 @@ public class FileUtil {
         out.write(file);
         out.flush();
         out.close();
+        sout.println("上传成功");
     }
 }

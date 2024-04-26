@@ -92,14 +92,15 @@ function removeMessage() {
              height="30" src="../../assets1/图标头.png" alt="logo"/>
         <div @click="$router.push('/')" style="cursor: pointer; ;margin-left: 8px;
          -webkit-user-select: none;
+         padding-top: 8px;
       margin-right: -38px;
 width: 100px;
                 /*border: 1px solid red;*/
                 text-indent:  -100px;
                 overflow: hidden;">
-          <img height="28" width="90"
+          <img height="30" width="90"
                style="  -webkit-user-drag: none;;filter: drop-shadow(140px 0px var(--td-text-color-primary));margin-left: -40px"
-               src="../../assets1/商标.png" alt="logo"/>
+               src="../../assets1/汉字pinyu.png" alt="logo"/>
         </div>
 
       </template>

@@ -18,19 +18,16 @@ const store = useCounterStore();
 
         <div class="header-container">
           <div style="height:10vh"></div>
-          <h2 style="font-size: 44px" class="title">创科教育管理系统</h2>
+          <h2 style="font-size: 76px;font-family: '楷体'" class="title">品钰教育管理系统</h2>
           <p style="font-size: 20px" class="subtitle">打造高效便捷的全新教育管理体验</p>
         <div style="height: 20px"></div>
         </div>
         <div class="welcome-section">
           <div class="welcome-image-container"
-               style="height: 200px;;border: 1px solid black  ;  border-radius: 50%;width: 200px; ;margin: 0 auto; ">
-            <div style="height: 60px"></div>
-            <img @click="$router.push('/')" src="../../assets/home_hm_left.png" alt="欢迎图片"
+               style="height: 200px;box-shadow:0px 6px 12px #1E76F2 inset,  0px -6px 12px #037F05 inset;border: 1px solid black  ;  border-radius: 50%;width: 200px; ;margin: 0 auto; ">
+             <img @click="$router.push('/')" src="../../assets/图标头.png" alt="欢迎图片"
                  class="welcome-image"
-                 style="cursor: pointer;width: 80px"> <a href="https://s.bdqn.cn" target="_blank"> <img   src="../../assets/bdqn.png" alt="欢迎图片" style="width: 80px"
-                                           class="welcome-image"
-          ></a>
+                 style=" transition: all 0.2s ease-in-out;;cursor: pointer;width: 100%">
           </div>
           <div class="welcome-content" style="padding-top: 20px;padding-bottom: 10px"><h2 class="welcome-text">WELCOME TO CK MANAGE SYSTEM!</h2>
             <p class="description"> 这里整合了丰富的教育资源，配备了科学的课程管理体系以及全面的学生信息管理模块。<br>
@@ -78,7 +75,7 @@ const store = useCounterStore();
 
 .welcome-image:hover {
   transform: scale(1.1);
-  transition: all 0.2s ease-in-out;
+
 }
 
 </style>

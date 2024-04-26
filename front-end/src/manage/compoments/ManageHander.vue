@@ -2,15 +2,19 @@
   <t-menu width="200px" :theme="darkT?'dark':'light'" default-value="item2" :collapsed="collapsed"
           @change="changeHandler">
     <template #logo>
-      <img @click="$router.push('/')"
-           style="transition: all 300ms;cursor: pointer;   -webkit-user-select: none;-webkit-user-drag: none;"
-           height="28" src="../../assets/home_hm_left.png" alt="logo"/>
-      <div @click="$router.push('/')" :style="'transition: all 300ms;cursor: pointer;margin-left: 8px; -webkit-user-select: none; margin-right: -38px; text-indent:  -100px;overflow: hidden;' +(collapsed? 'width:-1px;':'width:110px;')
-
-               ">
-        <img height="28"
-             style="  -webkit-user-drag: none;;filter: drop-shadow(180px 0px var(--td-text-color-primary));margin-left: -80px"
-             src="../../assets/汉字创科.png" alt="logo"/>
+      <img @click="$router.push('/')" style="cursor: pointer;   -webkit-user-select: none;-webkit-user-drag: none;"
+           height="30" src="../../assets/图标头.png" alt="logo"/>
+      <div @click="$router.push('/')" style="cursor: pointer; ;margin-left: 8px;
+         -webkit-user-select: none;
+         padding-top: 8px;
+      margin-right: -38px;
+width: 100px;
+                /*border: 1px solid red;*/
+                text-indent:  -100px;
+                overflow: hidden;">
+        <img height="30" width="90"
+             style="  -webkit-user-drag: none;;filter: drop-shadow(140px 0px var(--td-text-color-primary));margin-left: -40px"
+             src="../../assets/汉字pinyu.png" alt="logo"/>
       </div>
     </template>
     <t-menu-group title="教务管理">

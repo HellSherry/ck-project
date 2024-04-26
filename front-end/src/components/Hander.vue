@@ -89,7 +89,7 @@ function removeMessage() {
                  v-model="menu1Value" :theme="store.darkT?'dark': 'light'">
       <template #logo>
         <img @click="$router.push('/')" style="cursor: pointer;   -webkit-user-select: none;-webkit-user-drag: none;"
-             height="28" src="../assets/商标头1.png" alt="logo"/>
+             height="28" src="../../assets1/商标.jpg" alt="logo"/>
         <div @click="$router.push('/')" style="cursor: pointer; ;margin-left: 8px;
          -webkit-user-select: none;
       margin-right: -38px;
@@ -99,7 +99,7 @@ width: 100px;
                 overflow: hidden;">
           <img height="28" width="40"
                style="  -webkit-user-drag: none;;filter: drop-shadow(140px 0px var(--td-text-color-primary));margin-left: -40px"
-               src="../assets/商标.jpg" alt="logo"/>
+               src="../../assets1/商标.jpg" alt="logo"/>
         </div>
 
       </template>

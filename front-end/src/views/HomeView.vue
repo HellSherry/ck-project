@@ -51,6 +51,17 @@ service('/practice/getTodaySimpleDetails').then(res => {
 
 
 const menuPanna=ref(0)
+
+//定义一个数组存放oos图片路径
+const images = ref([
+  'https://shhandyxx.oss-cn-hangzhou.aliyuncs.com/zxxx/0.jpg',
+  'https://shhandyxx.oss-cn-hangzhou.aliyuncs.com/zxxx/1.jpg',
+  'https://shhandyxx.oss-cn-hangzhou.aliyuncs.com/zxxx/2.jpg',
+  'https://shhandyxx.oss-cn-hangzhou.aliyuncs.com/zxxx/3.jpg',
+  'https://shhandyxx.oss-cn-hangzhou.aliyuncs.com/zxxx/4.jpg',
+  'https://shhandyxx.oss-cn-hangzhou.aliyuncs.com/zxxx/5.jpg',
+])
+
 if (window.innerWidth < 500) {
   // alert("ss")
   const onCancel = () => {
@@ -79,6 +90,7 @@ function goToExam(item) {
     router.push('/exam/answer/' + item.paperid)
   }
 }
+
 function notStart(){
 
   const elementById = document.getElementById("audioController");
@@ -104,8 +116,10 @@ return   dayjs(new Date(new Date().toLocaleDateString()).getTime()+parseInt(sess
 </script>
 
 <template>
-<div   :style='`background-image: url("/assets1/bannerpic/${menuPanna}.jpg") ;`' style="transition: all 0.5s;margin-top: -56px; background-repeat: no-repeat;background-size: cover">
-<div  :class="store.darkT?'boxdark':'box'" style="backdrop-filter: blur(20px);padding-top: 56px;padding-bottom: 10px">
+
+<div :style="`background-image: url(${images[menuPanna]}) ;`" style="transition: all 0.5s;margin-top: -56px; background-repeat: no-repeat;background-size: cover">
+
+  <div  :class="store.darkT?'boxdark':'box'" style="backdrop-filter: blur(20px);padding-top: 56px;padding-bottom: 10px">
 
 
   <t-layout v-if="store.loginUser!=null" style="background-color: #00000000 ;width: 94%;margin: 0 auto;padding: 12px 0;min-width: 500px">
@@ -141,32 +155,25 @@ return   dayjs(new Date(new Date().toLocaleDateString()).getTime()+parseInt(sess
       </div>
 
 
-      <!--        <nut-grid :column-num="2" style=" width: 90%;margin: 20px auto;">-->
-      <!--          <nut-grid-item text="学习时长"><h2 style="line-height: 1px;margin-bottom: 4px">0</h2></nut-grid-item>-->
-      <!--          <nut-grid-item text="本日答题数量"><h2 style="line-height: 1px;margin-bottom: 4px">0</h2></nut-grid-item>-->
-      <!--          <nut-grid-item text="实际答题数量"><h2 style="line-height: 1px;margin-bottom: 4px">0</h2></nut-grid-item>-->
-      <!--          <nut-grid-item text="答题正确率"><h2 style="line-height: 1px;margin-bottom: 4px">0</h2></nut-grid-item>-->
-      <!--        </nut-grid>-->
 
 
     </t-aside>
-    <t-content style="width: 60% ;user-select: none;margin: 0 1%">
-      <t-swiper v-model:current="menuPanna"  class="tdesign-demo-block--swiper" style="border-radius: 12px;overflow: hidden;" :duration="300"
-                :interval="2000">
+
+    <!--
+  登录显示的轮播图
+  -->
+
+    <t-content style="width: 60%; user-select: none; margin: 0 1%">
+      <t-swiper v-model:current="menuPanna" class="tdesign-demo-block--swiper" style="border-radius: 12px; overflow: hidden;" :duration="300" :interval="2000">
         <t-swiper-item
-
-            :style='`background-image: url("/assets1/bannerpic/${menuPanna}.jpg") ;`'
-            style="background-position: center;background-repeat: no-repeat;background-size: cover;aspect-ratio: 2.2"
-            v-for="item in 6" :key="item">
-          <div style="height: 44vh;">
-
-          </div>
-          <!--            <img name='img' style="width: 100% ;-->
-          <!--object-fit: cover;" src="../assets/bannerpic/4.jpg" draggable="false" alt="">-->
+            :style="`background-image: url(${images[menuPanna]}) ;`"
+            style="background-position: center; background-repeat: no-repeat; background-size: cover; aspect-ratio: 2.2"
+            v-for="item in images.length" :key="item">
+          <div style="height: 44vh;"></div>
         </t-swiper-item>
-
       </t-swiper>
     </t-content>
+
     <t-aside   :class="store.darkT?'boxdark':'box'" width="19%" style="max-height: 44vh;overflow: auto;border-radius: 12px">
 
 
@@ -195,38 +202,28 @@ return   dayjs(new Date(new Date().toLocaleDateString()).getTime()+parseInt(sess
           暂时还没有你需要参加的考试哦
       </div>
         </t-collapse>
-
-        <!--            <t-list stripe style="border-radius: 10px;box-shadow: 0 0 1px 0 rgba(121,121,121,0.51);font-size: 10px"  >-->
-        <!--              <t-list-item v-for="item in store.examList"  >-->
-        <!--                <t-list-item-meta    :title="item.papername" />-->
-        <!--                <template #action>-->
-
-        <!--                </template>-->
-        <!--              </t-list-item>-->
-        <!--            </t-list>-->
-
       </div>
-
-
-      <!--      <Typer style="text-align: center;margin: 10px 2%  "/>-->
     </t-aside>
 
 
+
   </t-layout>
+
+  <!--
+    没有登录显示的轮播图
+  -->
+
   <t-layout v-else style="background-color: #00000000 ;width: 94%;margin: 0 auto;padding: 12px 0;min-width: 500px">
      <t-content style="  user-select: none; ">
       <t-swiper v-model:current="menuPanna"  class="tdesign-demo-block--swiper" style="border-radius: 12px;overflow: hidden;" :duration="300"
                 :interval="2000">
         <t-swiper-item
-
-            :style='`background-image: url("/assets1/bannerpic/${menuPanna}.jpg") ;`'
+            :style="`background-image: url(${images[menuPanna]}) ;`"
             style="background-position: center;background-repeat: no-repeat;background-size: cover;aspect-ratio: 2.2"
             v-for="item in 6" :key="item">
           <div style="height: 300px;">
 
           </div>
-<!--                      <img name='img' style="width: 100% ;-->
-<!--     object-fit: cover;" src="../assets/bannerpic/4.jpg" draggable="false" alt="">-->
         </t-swiper-item>
 
       </t-swiper>

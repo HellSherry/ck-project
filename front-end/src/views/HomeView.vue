@@ -239,8 +239,8 @@ return   dayjs(new Date(new Date().toLocaleDateString()).getTime()+parseInt(sess
     <t-tag theme="primary" STYLE="margin-right: 10PX" variant="outline">一言</t-tag><Typer style="display: inline-block" />
   </t-card>
   <div style="display: block;margin: 10px auto;width: 94%;border-radius: 12px;overflow: hidden;">
-<!--    <iframe style="width: 100%;height: 80vh;margin-bottom: -10px" src="//player.bilibili.com/player.html?aid=1201876206&bvid=BV1ZF4m1c7M8&cid=1472052937&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>-->
-    <nut-video :source="source" :options="videoOptions"></nut-video>
+    <iframe style="width: 100%;height: 80vh;margin-bottom: -10px" src="//player.bilibili.com/player.html?aid=840422540&bvid=BV1M54y1R7Uu&cid=185004038&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true"> </iframe>
+<!--    <nut-video :source="source" :options="videoOptions"></nut-video>-->
   </div>
 
 

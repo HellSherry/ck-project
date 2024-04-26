@@ -9,6 +9,8 @@ import {storeToRefs} from "pinia";
 import {DialogPlugin, MessagePlugin} from "tdesign-vue-next";
 import service from "@/axios/service";
 
+
+
 const store = useCounterStore();
 const {search} = storeToRefs(store );
 var scrollTopLast = 0;
@@ -87,21 +89,21 @@ function removeMessage() {
                  v-model="menu1Value" :theme="store.darkT?'dark': 'light'">
       <template #logo>
         <img @click="$router.push('/')" style="cursor: pointer;   -webkit-user-select: none;-webkit-user-drag: none;"
-             height="32" src="../../assets1/图标头.png" alt="logo"/>
+             height="28" src="../../assets1/商标.jpg" alt="logo"/>
         <div @click="$router.push('/')" style="cursor: pointer; ;margin-left: 8px;
-                         -webkit-user-select: none;
-                      margin-right: -38px;
-                width: 100px;
+         -webkit-user-select: none;
+      margin-right: -38px;
+width: 100px;
                 /*border: 1px solid red;*/
                 text-indent:  -100px;
                 overflow: hidden;">
-          <img height="28"
+          <img height="28" width="40"
                style="  -webkit-user-drag: none;;filter: drop-shadow(140px 0px var(--td-text-color-primary));margin-left: -40px"
-               src="../../assets1/商标.png" alt="logo"/>
+               src="../../assets1/商标.jpg" alt="logo"/>
         </div>
 
       </template>
-      <t-menu-item @click="$router.push('/')" value="home" style="margin-left: 20px"> 首页</t-menu-item>
+      <t-menu-item @click="$router.push('/')" value="home"> 首页</t-menu-item>
       <t-menu-item @click="$router.push('/practice')" value="practice"> 练习</t-menu-item>
       <t-menu-item @click="$router.push('/exam')" value="exam"> 考试</t-menu-item>
       <!--      <t-menu-item @click="$router.push('/history')" value="history"> 历史 </t-menu-item>-->

@@ -151,18 +151,23 @@ function sizeFormatting(now){
       @cancel="search = false"
   >
     <div style="height: 10px">
-      <img @click="$router.push('/')" style="cursor: pointer;   -webkit-user-select: none;-webkit-user-drag: none;"
-           height="28" src="../assets/home_hm_left.png" alt="logo"/>
+<!--      <img @click="$router.push('/')" style="cursor: pointer;   -webkit-user-select: none;-webkit-user-drag: none;"
+           height="28" src="../assets/home_hm_left.png" alt="logo"/>-->
+          <img @click="$router.push('/')" style="cursor: pointer;   -webkit-user-select: none;-webkit-user-drag: none;"
+           height="28" src="../assets/图标头1.png" alt="logo"/>
       <div @click="$router.push('/')" style=";display: inline-block;cursor: pointer; ;margin-left: 8px;
          -webkit-user-select: none;
-      margin-right: -38px;
+      margin-right: -39px;
 width: 100px;
                 /*border: 1px solid red;*/
                 text-indent:  -100px;
                 overflow: hidden;">
-        <img height="28"
+<!--        <img height="28"
+             style="  -webkit-user-drag: none;;filter: drop-shadow(140px 0px var(&#45;&#45;td-text-color-primary));margin-left: -40px"
+             src="../assets/汉字创科.png" alt="logo"/>-->
+            <img height="28"
              style="  -webkit-user-drag: none;;filter: drop-shadow(140px 0px var(--td-text-color-primary));margin-left: -40px"
-             src="../assets/汉字创科.png" alt="logo"/>
+             src="../assets/商标1.png" alt="logo"/>
       </div>
     </div>
 
@@ -175,13 +180,13 @@ width: 100px;
       <div class="underline"></div>
     </div>
     <t-button size="large" style="position: absolute;right: 12%;top: 12px;"
-              @click="searchValue= $refs.searchInput.value;search=false" variant="text" shape="square">
+              @click="searchValue = $refs.searchInput.value;search=false" variant="text" shape="square">
       <template #icon>
         <t-icon style="font-size: 32px" name="search"/>
       </template>
     </t-button>
   </t-drawer>
-  <div style="background-image: url('/assets1/image/back.jpg');height: 100vh;">
+  <div style="background-image: url('/assets/image/back.jpg');height: 100vh;">
     <div :class="store.darkT?'boxdark':'box'" style=" height: 100vh;backdrop-filter: blur(10PX);padding-top:16px">
 
       <t-layout style="max-width: 1280px;margin:  0 auto;background-color: #0000">
